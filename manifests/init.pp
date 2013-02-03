@@ -8,6 +8,22 @@
 # Standard class parameters
 # Define the general class behaviour and customizations
 #
+# [*smarthost*]
+#   Hostname of the SMTP smarthost to be used.
+#   Defaults to 'mail'.
+#
+# [*from*]
+#   Envelope-From to enforce on all outgoing mail.
+#   Defaults to "$::fqdn@$domain"
+#
+# [*defaultalias*]
+#   E-mail adres to receive all local mail. For cron messages, etc.
+#   Defaults to "hostmaster@$domain"
+#
+# [*aliases*]
+#   Path to aliases-file. 
+#   Defaults to '/etc/aliases'
+#
 # [*my_class*]
 #   Name of a custom class to autoload to manage module's customizations
 #   If defined, msmtp class will automatically "include $my_class"
@@ -17,18 +33,6 @@
 #   Sets the content of source parameter for main configuration file
 #   If defined, msmtp main config file will have the param: source => $source
 #   Can be defined also by the (top scope) variable $msmtp_source
-#
-# [*source_dir*]
-#   If defined, the whole msmtp configuration directory content is retrieved
-#   recursively from the specified source
-#   (source => $source_dir , recurse => true)
-#   Can be defined also by the (top scope) variable $msmtp_source_dir
-#
-# [*source_dir_purge*]
-#   If set to true (default false) the existing configuration directory is
-#   mirrored with the content retrieved from source_dir
-#   (source => $source_dir , recurse => true , purge => true)
-#   Can be defined also by the (top scope) variable $msmtp_source_dir_purge
 #
 # [*template*]
 #   Sets the path to the template to use as content for main configuration file
@@ -71,9 +75,6 @@
 # [*package*]
 #   The name of msmtp package
 #
-# [*config_dir*]
-#   Main configuration directory. Used by puppi
-#
 # [*config_file*]
 #   Main configuration file path
 #
@@ -87,10 +88,12 @@
 #
 #
 class msmtp (
+  $smarthost           = params_lookup( 'smarthost' ),
+  $from                = params_lookup( 'from' ),
+  $defaultalias        = params_lookup( 'defaultalias' ),
+  $aliases             = params_lookup( 'aliases' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
-  $source_dir          = params_lookup( 'source_dir' ),
-  $source_dir_purge    = params_lookup( 'source_dir_purge' ),
   $template            = params_lookup( 'template' ),
   $options             = params_lookup( 'options' ),
   $version             = params_lookup( 'version' ),
@@ -98,7 +101,6 @@ class msmtp (
   $audit_only          = params_lookup( 'audit_only' , 'global' ),
   $noops               = params_lookup( 'noops' ),
   $package             = params_lookup( 'package' ),
-  $config_dir          = params_lookup( 'config_dir' ),
   $config_file         = params_lookup( 'config_file' ),
   ) inherits msmtp::params {
 
@@ -111,6 +113,19 @@ class msmtp (
   $bool_audit_only=any2bool($audit_only)
   $bool_noops=any2bool($noops)
 
+  if $defaultalias {
+    mailalias { 'default':
+      recipient => $defaultalias,
+      target    => $aliases,
+      notify    => Exec['msmtp-newaliases'] 
+    }
+
+    exec { 'msmtp-newaliases':
+     command     => '/usr/bin/newaliases',
+     refreshonly => true
+    }
+  }
+  
   ### Definition of some variables used in the module
   $manage_package = $msmtp::bool_absent ? {
     true  => 'absent',

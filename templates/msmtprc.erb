@@ -1,0 +1,19 @@
+### Managed by puppet
+#
+### Served by:        '<%= scope.lookupvar('::servername') %>'
+### Module:           '<%= scope.to_hash['module_name'] %>'
+### Template source:  'modules<%= template_source.gsub(Regexp.new("^#{Puppet::Node::Environment.current[:modulepath].gsub(':','|')}"),"") %>'
+
+account default
+  
+# The SMTP smarthost.
+host <%= smarthost %>
+
+# Rewrites all outgoing mail to a fixed sender.
+from <%= from %>
+
+# Set aliases-lookup so you can have a proper fall-through default destination for things like cron
+aliases <%= aliases %>
+
+# Syslog logging with facility LOG_MAIL instead of the default LOG_USER.
+syslog LOG_MAIL

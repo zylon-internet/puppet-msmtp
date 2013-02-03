@@ -14,38 +14,44 @@
 #
 class msmtp::params {
 
+  $smarthost = 'mail'
+ 
+  # This hack is used instead of the domainname fact, as this is often from on boxes with more than 2 dots in the fqdn
+  $domain = inline_template('<%= fqdn.split(".")[-2,2].join(".") %>')
+  $from = "$::fqdn@$domain"
+  $defaultalias = "hostmaster@$domain"
+
+  $aliases = $::osfamily ? {
+    default => '/etc/aliases',
+  }
+
   ### Application related parameters
 
-  $package = $::operatingsystem ? {
+  $package = $::osfamily ? {
+    'Debian' => 'msmtp-mta',
     default => 'msmtp',
   }
 
-  $config_dir = $::operatingsystem ? {
-    default => '/etc/msmtp',
+  $config_file = $::osfamily ? {
+    default => '/etc/msmtprc',
   }
 
-  $config_file = $::operatingsystem ? {
-    default => '/etc/msmtp/msmtp.conf',
-  }
-
-  $config_file_mode = $::operatingsystem ? {
+  $config_file_mode = $::osfamily ? {
     default => '0644',
   }
 
-  $config_file_owner = $::operatingsystem ? {
+  $config_file_owner = $::osfamily ? {
     default => 'root',
   }
 
-  $config_file_group = $::operatingsystem ? {
+  $config_file_group = $::osfamily ? {
     default => 'root',
   }
 
   # General Settings
   $my_class = ''
   $source = ''
-  $source_dir = ''
-  $source_dir_purge = false
-  $template = ''
+  $template = 'msmtp/msmtprc.erb'
   $options = ''
   $version = 'present'
   $absent = false
