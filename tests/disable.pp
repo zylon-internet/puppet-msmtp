@@ -1,4 +1,4 @@
-# Class' service disabling
+# Disable class service
 #
 class { 'msmtp':
   disable => true,

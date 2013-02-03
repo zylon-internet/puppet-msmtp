@@ -40,11 +40,6 @@
 #   An hash of custom options to be used in templates for arbitrary settings.
 #   Can be defined also by the (top scope) variable $msmtp_options
 #
-# [*service_autorestart*]
-#   Automatically restarts the msmtp service when there is a change in
-#   configuration files. Default: true, Set to false if you don't want to
-#   automatically restart the service.
-#
 # [*version*]
 #   The package version, used in the ensure parameter of package type.
 #   Default: present. Can be 'latest' or a specific version number.
@@ -54,69 +49,6 @@
 # [*absent*]
 #   Set to 'true' to remove package(s) installed by module
 #   Can be defined also by the (top scope) variable $msmtp_absent
-#
-# [*disable*]
-#   Set to 'true' to disable service(s) managed by module
-#   Can be defined also by the (top scope) variable $msmtp_disable
-#
-# [*disableboot*]
-#   Set to 'true' to disable service(s) at boot, without checks if it's running
-#   Use this when the service is managed by a tool like a cluster software
-#   Can be defined also by the (top scope) variable $msmtp_disableboot
-#
-# [*monitor*]
-#   Set to 'true' to enable monitoring of the services provided by the module
-#   Can be defined also by the (top scope) variables $msmtp_monitor
-#   and $monitor
-#
-# [*monitor_tool*]
-#   Define which monitor tools (ad defined in Example42 monitor module)
-#   you want to use for msmtp checks
-#   Can be defined also by the (top scope) variables $msmtp_monitor_tool
-#   and $monitor_tool
-#
-# [*monitor_target*]
-#   The Ip address or hostname to use as a target for monitoring tools.
-#   Default is the fact $ipaddress
-#   Can be defined also by the (top scope) variables $msmtp_monitor_target
-#   and $monitor_target
-#
-# [*puppi*]
-#   Set to 'true' to enable creation of module data files that are used by puppi
-#   Can be defined also by the (top scope) variables $msmtp_puppi and $puppi
-#
-# [*puppi_helper*]
-#   Specify the helper to use for puppi commands. The default for this module
-#   is specified in params.pp and is generally a good choice.
-#   You can customize the output of puppi commands for this module using another
-#   puppi helper. Use the define puppi::helper to create a new custom helper
-#   Can be defined also by the (top scope) variables $msmtp_puppi_helper
-#   and $puppi_helper
-#
-# [*firewall*]
-#   Set to 'true' to enable firewalling of the services provided by the module
-#   Can be defined also by the (top scope) variables $msmtp_firewall
-#   and $firewall
-#
-# [*firewall_tool*]
-#   Define which firewall tool(s) (ad defined in Example42 firewall module)
-#   you want to use to open firewall for msmtp port(s)
-#   Can be defined also by the (top scope) variables $msmtp_firewall_tool
-#   and $firewall_tool
-#
-# [*firewall_src*]
-#   Define which source ip/net allow for firewalling msmtp. Default: 0.0.0.0/0
-#   Can be defined also by the (top scope) variables $msmtp_firewall_src
-#   and $firewall_src
-#
-# [*firewall_dst*]
-#   Define which destination ip to use for firewalling. Default: $ipaddress
-#   Can be defined also by the (top scope) variables $msmtp_firewall_dst
-#   and $firewall_dst
-#
-# [*debug*]
-#   Set to 'true' to enable modules debugging
-#   Can be defined also by the (top scope) variables $msmtp_debug and $debug
 #
 # [*audit_only*]
 #   Set to 'true' if you don't intend to override existing configuration files
@@ -139,63 +71,11 @@
 # [*package*]
 #   The name of msmtp package
 #
-# [*service*]
-#   The name of msmtp service
-#
-# [*service_status*]
-#   If the msmtp service init script supports status argument
-#
-# [*process*]
-#   The name of msmtp process
-#
-# [*process_args*]
-#   The name of msmtp arguments. Used by puppi and monitor.
-#   Used only in case the msmtp process name is generic (java, ruby...)
-#
-# [*process_user*]
-#   The name of the user msmtp runs with. Used by puppi and monitor.
-#
 # [*config_dir*]
 #   Main configuration directory. Used by puppi
 #
 # [*config_file*]
 #   Main configuration file path
-#
-# [*config_file_mode*]
-#   Main configuration file path mode
-#
-# [*config_file_owner*]
-#   Main configuration file path owner
-#
-# [*config_file_group*]
-#   Main configuration file path group
-#
-# [*config_file_init*]
-#   Path of configuration file sourced by init script
-#
-# [*pid_file*]
-#   Path of pid file. Used by monitor
-#
-# [*data_dir*]
-#   Path of application data directory. Used by puppi
-#
-# [*log_dir*]
-#   Base logs directory. Used by puppi
-#
-# [*log_file*]
-#   Log file(s). Used by puppi
-#
-# [*port*]
-#   The listening port, if any, of the service.
-#   This is used by monitor, firewall and puppi (optional) components
-#   Note: This doesn't necessarily affect the service configuration file
-#   Can be defined also by the (top scope) variable $msmtp_port
-#
-# [*protocol*]
-#   The protocol used by the the service.
-#   This is used by monitor, firewall and puppi (optional) components
-#   Can be defined also by the (top scope) variable $msmtp_protocol
-#
 #
 # == Examples
 #
@@ -206,62 +86,28 @@
 # See README for details.
 #
 #
-# == Author
-#   Alessandro Franceschi <al@lab42.it/>
-#
 class msmtp (
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
   $source_dir          = params_lookup( 'source_dir' ),
   $source_dir_purge    = params_lookup( 'source_dir_purge' ),
   $template            = params_lookup( 'template' ),
-  $service_autorestart = params_lookup( 'service_autorestart' , 'global' ),
   $options             = params_lookup( 'options' ),
   $version             = params_lookup( 'version' ),
   $absent              = params_lookup( 'absent' ),
-  $disable             = params_lookup( 'disable' ),
-  $disableboot         = params_lookup( 'disableboot' ),
-  $monitor             = params_lookup( 'monitor' , 'global' ),
-  $monitor_tool        = params_lookup( 'monitor_tool' , 'global' ),
-  $monitor_target      = params_lookup( 'monitor_target' , 'global' ),
-  $puppi               = params_lookup( 'puppi' , 'global' ),
-  $puppi_helper        = params_lookup( 'puppi_helper' , 'global' ),
-  $firewall            = params_lookup( 'firewall' , 'global' ),
-  $firewall_tool       = params_lookup( 'firewall_tool' , 'global' ),
-  $firewall_src        = params_lookup( 'firewall_src' , 'global' ),
-  $firewall_dst        = params_lookup( 'firewall_dst' , 'global' ),
-  $debug               = params_lookup( 'debug' , 'global' ),
   $audit_only          = params_lookup( 'audit_only' , 'global' ),
   $noops               = params_lookup( 'noops' ),
   $package             = params_lookup( 'package' ),
-  $service             = params_lookup( 'service' ),
-  $service_status      = params_lookup( 'service_status' ),
-  $process             = params_lookup( 'process' ),
-  $process_args        = params_lookup( 'process_args' ),
-  $process_user        = params_lookup( 'process_user' ),
   $config_dir          = params_lookup( 'config_dir' ),
   $config_file         = params_lookup( 'config_file' ),
-  $config_file_mode    = params_lookup( 'config_file_mode' ),
-  $config_file_owner   = params_lookup( 'config_file_owner' ),
-  $config_file_group   = params_lookup( 'config_file_group' ),
-  $config_file_init    = params_lookup( 'config_file_init' ),
-  $pid_file            = params_lookup( 'pid_file' ),
-  $data_dir            = params_lookup( 'data_dir' ),
-  $log_dir             = params_lookup( 'log_dir' ),
-  $log_file            = params_lookup( 'log_file' ),
-  $port                = params_lookup( 'port' ),
-  $protocol            = params_lookup( 'protocol' )
   ) inherits msmtp::params {
 
+  $config_file_mode=$msmtp::params::config_file_mode
+  $config_file_owner=$msmtp::params::config_file_owner
+  $config_file_group=$msmtp::params::config_file_group
+
   $bool_source_dir_purge=any2bool($source_dir_purge)
-  $bool_service_autorestart=any2bool($service_autorestart)
   $bool_absent=any2bool($absent)
-  $bool_disable=any2bool($disable)
-  $bool_disableboot=any2bool($disableboot)
-  $bool_monitor=any2bool($monitor)
-  $bool_puppi=any2bool($puppi)
-  $bool_firewall=any2bool($firewall)
-  $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
   $bool_noops=any2bool($noops)
 
@@ -271,48 +117,9 @@ class msmtp (
     false => $msmtp::version,
   }
 
-  $manage_service_enable = $msmtp::bool_disableboot ? {
-    true    => false,
-    default => $msmtp::bool_disable ? {
-      true    => false,
-      default => $msmtp::bool_absent ? {
-        true  => false,
-        false => true,
-      },
-    },
-  }
-
-  $manage_service_ensure = $msmtp::bool_disable ? {
-    true    => 'stopped',
-    default =>  $msmtp::bool_absent ? {
-      true    => 'stopped',
-      default => 'running',
-    },
-  }
-
-  $manage_service_autorestart = $msmtp::bool_service_autorestart ? {
-    true    => Service[msmtp],
-    false   => undef,
-  }
-
   $manage_file = $msmtp::bool_absent ? {
     true    => 'absent',
     default => 'present',
-  }
-
-  if $msmtp::bool_absent == true
-  or $msmtp::bool_disable == true
-  or $msmtp::bool_disableboot == true {
-    $manage_monitor = false
-  } else {
-    $manage_monitor = true
-  }
-
-  if $msmtp::bool_absent == true
-  or $msmtp::bool_disable == true {
-    $manage_firewall = false
-  } else {
-    $manage_firewall = true
   }
 
   $manage_audit = $msmtp::bool_audit_only ? {
@@ -341,16 +148,6 @@ class msmtp (
     noop    => $msmtp::bool_noops,
   }
 
-  service { 'msmtp':
-    ensure     => $msmtp::manage_service_ensure,
-    name       => $msmtp::service,
-    enable     => $msmtp::manage_service_enable,
-    hasstatus  => $msmtp::service_status,
-    pattern    => $msmtp::process,
-    require    => Package[$msmtp::package],
-    noop       => $msmtp::bool_noops,
-  }
-
   file { 'msmtp.conf':
     ensure  => $msmtp::manage_file,
     path    => $msmtp::config_file,
@@ -358,7 +155,6 @@ class msmtp (
     owner   => $msmtp::config_file_owner,
     group   => $msmtp::config_file_group,
     require => Package[$msmtp::package],
-    notify  => $msmtp::manage_service_autorestart,
     source  => $msmtp::manage_file_source,
     content => $msmtp::manage_file_content,
     replace => $msmtp::manage_file_replace,
@@ -387,75 +183,6 @@ class msmtp (
   ### Include custom class if $my_class is set
   if $msmtp::my_class {
     include $msmtp::my_class
-  }
-
-
-  ### Provide puppi data, if enabled ( puppi => true )
-  if $msmtp::bool_puppi == true {
-    $classvars=get_class_args()
-    puppi::ze { 'msmtp':
-      ensure    => $msmtp::manage_file,
-      variables => $classvars,
-      helper    => $msmtp::puppi_helper,
-      noop      => $msmtp::bool_noops,
-    }
-  }
-
-
-  ### Service monitoring, if enabled ( monitor => true )
-  if $msmtp::bool_monitor == true {
-    if $msmtp::port != '' {
-      monitor::port { "msmtp_${msmtp::protocol}_${msmtp::port}":
-        protocol => $msmtp::protocol,
-        port     => $msmtp::port,
-        target   => $msmtp::monitor_target,
-        tool     => $msmtp::monitor_tool,
-        enable   => $msmtp::manage_monitor,
-        noop     => $msmtp::bool_noops,
-      }
-    }
-    if $msmtp::service != '' {
-      monitor::process { 'msmtp_process':
-        process  => $msmtp::process,
-        service  => $msmtp::service,
-        pidfile  => $msmtp::pid_file,
-        user     => $msmtp::process_user,
-        argument => $msmtp::process_args,
-        tool     => $msmtp::monitor_tool,
-        enable   => $msmtp::manage_monitor,
-        noop     => $msmtp::bool_noops,
-      }
-    }
-  }
-
-
-  ### Firewall management, if enabled ( firewall => true )
-  if $msmtp::bool_firewall == true and $msmtp::port != '' {
-    firewall { "msmtp_${msmtp::protocol}_${msmtp::port}":
-      source      => $msmtp::firewall_src,
-      destination => $msmtp::firewall_dst,
-      protocol    => $msmtp::protocol,
-      port        => $msmtp::port,
-      action      => 'allow',
-      direction   => 'input',
-      tool        => $msmtp::firewall_tool,
-      enable      => $msmtp::manage_firewall,
-      noop        => $msmtp::bool_noops,
-    }
-  }
-
-
-  ### Debugging, if enabled ( debug => true )
-  if $msmtp::bool_debug == true {
-    file { 'debug_msmtp':
-      ensure  => $msmtp::manage_file,
-      path    => "${settings::vardir}/debug-msmtp",
-      mode    => '0640',
-      owner   => 'root',
-      group   => 'root',
-      content => inline_template('<%= scope.to_hash.reject { |k,v| k.to_s =~ /(uptime.*|path|timestamp|free|.*password.*|.*psk.*|.*key)/ }.to_yaml %>'),
-      noop    => $msmtp::bool_noops,
-    }
   }
 
 }
