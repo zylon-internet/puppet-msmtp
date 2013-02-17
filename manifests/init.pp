@@ -101,7 +101,7 @@ class msmtp (
   $audit_only          = params_lookup( 'audit_only' , 'global' ),
   $noops               = params_lookup( 'noops' ),
   $package             = params_lookup( 'package' ),
-  $config_file         = params_lookup( 'config_file' ),
+  $config_file         = params_lookup( 'config_file' )
   ) inherits msmtp::params {
 
   $config_file_mode=$msmtp::params::config_file_mode
