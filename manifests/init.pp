@@ -121,18 +121,6 @@
 #   Basically you can run a dryrun for this specific module if you set
 #   this to true. Default: false
 #
-# [*source_dir*]
-#   If defined, the whole msmtp configuration directory content is retrieved
-#   recursively from the specified source
-#   (source => $source_dir , recurse => true)
-#   Can be defined also by the (top scope) variable $msmtp_source_dir
-#
-# [*source_dir_purge*]
-#   If set to true (default false) the existing configuration directory is
-#   mirrored with the content retrieved from source_dir
-#   (source => $source_dir , recurse => true , purge => true)
-#   Can be defined also by the (top scope) variable $msmtp_source_dir_purge
-#
 # Default class params - As defined in msmtp::params.
 # Note that these variables are mostly defined and used in the module itself,
 # overriding the default values might not affected all the involved components.
@@ -181,16 +169,13 @@ class msmtp (
   $audit_only          = params_lookup( 'audit_only' , 'global' ),
   $noops               = params_lookup( 'noops' ),
   $package             = params_lookup( 'package' ),
-  $config_file         = params_lookup( 'config_file' ),
-  $source_dir          = params_lookup( 'source_dir' ),
-  $source_dir_purge    = params_lookup( 'source_dir_purge' )
+  $config_file         = params_lookup( 'config_file' )
 ) inherits msmtp::params {
 
   $config_file_mode=$msmtp::params::config_file_mode
   $config_file_owner=$msmtp::params::config_file_owner
   $config_file_group=$msmtp::params::config_file_group
 
-  $bool_source_dir_purge=any2bool($source_dir_purge)
   $bool_absent=any2bool($absent)
   $bool_audit_only=any2bool($audit_only)
   $bool_noops=any2bool($noops)
@@ -259,27 +244,8 @@ class msmtp (
     noop    => $msmtp::bool_noops,
   }
 
-  # The whole msmtp configuration directory can be recursively overriden
-  if $msmtp::source_dir {
-    file { 'msmtp.dir':
-      ensure  => directory,
-      path    => $msmtp::config_dir,
-      require => Package[$msmtp::package],
-      notify  => $msmtp::manage_service_autorestart,
-      source  => $msmtp::source_dir,
-      recurse => true,
-      purge   => $msmtp::bool_source_dir_purge,
-      force   => $msmtp::bool_source_dir_purge,
-      replace => $msmtp::manage_file_replace,
-      audit   => $msmtp::manage_audit,
-      noop    => $msmtp::bool_noops,
-    }
-  }
-
-
   ### Include custom class if $my_class is set
   if $msmtp::my_class {
     include $msmtp::my_class
   }
-
 }
