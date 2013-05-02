@@ -3,15 +3,12 @@
 account default
   
 host <%= scope.lookupvar('msmtp::smarthost') %>
-
 <% if scope.lookupvar('msmtp::port') != '' -%>
 port <%= scope.lookupvar('msmtp::port') %>
 <% end -%>
-
 <% if scope.lookupvar('msmtp::timeout') != '' -%>
 timeout <%= scope.lookupvar('msmtp::timeout') %>
 <% end -%>
-
 <% if scope.lookupvar('msmtp::protocol') != '' -%>
 protocol <%= scope.lookupvar('msmtp::protocol') %>
 <% end -%>
@@ -26,7 +23,6 @@ password <%= scope.lookupvar('msmtp::password') %>
 tls <%= scope.lookupvar('msmtp::tls') != '' %>
 tls_trust_file  <%= scope.lookupvar('msmtp::tls_trust_file') %>
 <% end -%>
-
 <% if scope.lookupvar('msmtp::tls_starttls') != '' -%>
 tls_starttls <%= scope.lookupvar('msmtp::tls_starttls') %>
 <% end -%>
@@ -34,7 +30,6 @@ tls_starttls <%= scope.lookupvar('msmtp::tls_starttls') %>
 <% if scope.lookupvar('msmtp::domain') != '' -%>
 domain <%= scope.lookupvar('msmtp::domain') %>
 <% end -%>
-
 <% if scope.lookupvar('msmtp::auto_from') != '' -%>
 auto-from <%= scope.lookupvar('msmtp::auto_from') %>
 maildomain <%= scope.lookupvar('msmtp::maildomain') %>
