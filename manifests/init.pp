@@ -183,7 +183,7 @@ class msmtp (
   $package             = params_lookup( 'package' ),
   $config_file         = params_lookup( 'config_file' ),
   $source_dir          = params_lookup( 'source_dir' ),
-  $source_dir_purge    = params_lookup( 'source_dir_purge' ),
+  $source_dir_purge    = params_lookup( 'source_dir_purge' )
 ) inherits msmtp::params {
 
   $config_file_mode=$msmtp::params::config_file_mode
