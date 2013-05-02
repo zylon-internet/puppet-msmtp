@@ -24,8 +24,8 @@ class msmtp::params {
   $tls = ''
   $tls_trust_file = ''
 
-  $domain = "${::domain}"
-  $maildomain = "${::domain}"
+  $domain = $::domain
+  $maildomain = $::domain
 
   $from = "$::fqdn@${::domain}"
   $defaultalias = "hostmaster@${::domain}"
@@ -41,7 +41,7 @@ class msmtp::params {
 
   $package = $::osfamily ? {
     'Debian' => 'msmtp-mta',
-    default => 'msmtp',
+    default  => 'msmtp',
   }
 
   $config_file = $::osfamily ? {

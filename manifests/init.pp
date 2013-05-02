@@ -40,8 +40,8 @@
 #   Set your password for SMTP authentication.
 #
 # [*tls*]
-#   Enable or disable TLS/SSL encryption. 
-#   
+#   Enable or disable TLS/SSL encryption.
+#
 # [*tls_trust_file*]
 #   This command activates strict server certificate verification.
 #   Recommended if [*tls*] is on.
@@ -76,7 +76,7 @@
 #   Defaults to "hostmaster@$domain"
 #
 # [*aliases*]
-#   Path to aliases-file. 
+#   Path to aliases-file.
 #   Defaults to '/etc/aliases'
 #
 # [*my_class*]
@@ -199,15 +199,15 @@ class msmtp (
     mailalias { 'default':
       recipient => $defaultalias,
       target    => $aliases,
-      notify    => Exec['msmtp-newaliases'] 
+      notify    => Exec['msmtp-newaliases']
     }
 
     exec { 'msmtp-newaliases':
-     command     => '/usr/bin/newaliases',
-     refreshonly => true
+      command     => '/usr/bin/newaliases',
+      refreshonly => true
     }
   }
-  
+
   ### Definition of some variables used in the module
   $manage_package = $msmtp::bool_absent ? {
     true  => 'absent',
