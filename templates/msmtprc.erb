@@ -4,48 +4,48 @@ account default
   
 host <%= scope.lookupvar('msmtp::smarthost') %>
 
-<% if scope.lookupvar('msmtp::port') -%>
+<% if scope.lookupvar('msmtp::port') != '' -%>
 port <%= scope.lookupvar('msmtp::port') %>
 <% end -%>
 
-<% if scope.lookupvar('msmtp::timeout') -%>
+<% if scope.lookupvar('msmtp::timeout') != '' -%>
 timeout <%= scope.lookupvar('msmtp::timeout') %>
 <% end -%>
 
-<% if scope.lookupvar('msmtp::protocol') -%>
+<% if scope.lookupvar('msmtp::protocol') != '' -%>
 protocol <%= scope.lookupvar('msmtp::protocol') %>
 <% end -%>
 
-<% if scope.lookupvar('msmtp::auth') -%>
+<% if scope.lookupvar('msmtp::auth') != '' -%>
 auth <%= scope.lookupvar('msmtp::auth') %>
 user <%= scope.lookupvar('msmtp::user') %>
 password <%= scope.lookupvar('msmtp::password') %>
 <% end -%>
 
-<% if scope.lookupvar('msmtp::tls') -%>
-tls <%= scope.lookupvar('msmtp::tls') %>
+<% if scope.lookupvar('msmtp::tls') != '' -%>
+tls <%= scope.lookupvar('msmtp::tls') != '' %>
 tls_trust_file  <%= scope.lookupvar('msmtp::tls_trust_file') %>
 <% end -%>
 
-<% if scope.lookupvar('msmtp::tls_starttls') -%>
+<% if scope.lookupvar('msmtp::tls_starttls') != '' -%>
 tls_starttls <%= scope.lookupvar('msmtp::tls_starttls') %>
 <% end -%>
 
-<% if scope.lookupvar('msmtp::domain') -%>
+<% if scope.lookupvar('msmtp::domain') != '' -%>
 domain <%= scope.lookupvar('msmtp::domain') %>
 <% end -%>
 
-<% if scope.lookupvar('msmtp::auto_from') -%>
+<% if scope.lookupvar('msmtp::auto_from') != '' -%>
 auto-from <%= scope.lookupvar('msmtp::auto_from') %>
 maildomain <%= scope.lookupvar('msmtp::maildomain') %>
 <% end -%>
 
 from <%= scope.lookupvar('msmtp::from') %>
 
-<% if scope.lookupvar('msmtp::aliases') -%>
+<% if scope.lookupvar('msmtp::aliases') != '' -%>
 aliases <%= scope.lookupvar('msmtp::aliases') %>
 <% end -%>
 
-<% if scope.lookupvar('msmtp::syslog') -%>
+<% if scope.lookupvar('msmtp::syslog') != '' -%>
 syslog <%= scope.lookupvar('msmtp::log_facility') %>
 <% end -%>
