@@ -53,13 +53,6 @@ This module requires the presence of Example42 Puppi module in your modulepath.
         }
 
 
-* Use custom source directory for the whole configuration dir
-
-        class { 'msmtp':
-          source_dir       => 'puppet:///modules/example42/msmtp/conf/',
-          source_dir_purge => false, # Set to true to purge any existing file not present in $source_dir
-        }
-
 * Use custom template for main config file. Note that template and source arguments are alternative. 
 
         class { 'msmtp':

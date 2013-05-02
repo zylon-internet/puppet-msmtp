@@ -16,6 +16,16 @@ describe 'msmtp' do
     it { should contain_package('msmtp').with_ensure('1.0.42') }
   end
 
+  describe 'Test msmtp.conf managed throuh template' do
+    let(:facts) { {:operatingsystem => 'Debian' } }
+    let(:params) { {:template => 'msmtp/msmtprc.erb', 
+                    :auth => 'on', :user => 'someuser', :password => 'somepassword' } }
+    it { should contain_file('msmtp.conf').without_source }
+    it { should contain_file('msmtp.conf').with_content(/auth on
+user someuser
+password somepassword/) }
+  end
+
   describe 'Test decommissioning - absent' do
     let(:params) { {:absent => true } }
     it 'should remove Package[msmtp]' do should contain_package('msmtp').with_ensure('absent') end 
@@ -43,13 +53,6 @@ describe 'msmtp' do
   describe 'Test customizations - source' do
     let(:params) { {:source => "puppet:///modules/msmtp/spec"} }
     it { should contain_file('msmtp.conf').with_source('puppet:///modules/msmtp/spec') }
-  end
-
-  describe 'Test customizations - source_dir' do
-    let(:params) { {:source_dir => "puppet:///modules/msmtp/dir/spec" , :source_dir_purge => true } }
-    it { should contain_file('msmtp.dir').with_source('puppet:///modules/msmtp/dir/spec') }
-    it { should contain_file('msmtp.dir').with_purge('true') }
-    it { should contain_file('msmtp.dir').with_force('true') }
   end
 
   describe 'Test customizations - custom class' do
