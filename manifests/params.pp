@@ -15,15 +15,27 @@
 class msmtp::params {
 
   $smarthost = 'mail'
- 
-  # This hack is used instead of the domainname fact, as this is often from on boxes with more than 2 dots in the fqdn
-  $domain = inline_template('<%= fqdn.split(".")[-2,2].join(".") %>')
-  $from = "$::fqdn@$domain"
-  $defaultalias = "hostmaster@$domain"
+  $port = ''
+  $timeout = ''
+  $protocol = ''
+  $auth = ''
+  $user = ''
+  $password = ''
+  $tls = ''
+  $tls_trust_file = ''
+
+  $domain = "${::domain}"
+  $maildomain = "${::domain}"
+
+  $from = "$::fqdn@${::domain}"
+  $defaultalias = "hostmaster@${::domain}"
+
 
   $aliases = $::osfamily ? {
     default => '/etc/aliases',
   }
+
+  $log_facility = 'LOG_MAIL'
 
   ### Application related parameters
 
@@ -57,5 +69,6 @@ class msmtp::params {
   $absent = false
   $audit_only = false
   $noops = false
-
+  $source_dir = ''
+  $source_dir_purge = false
 }

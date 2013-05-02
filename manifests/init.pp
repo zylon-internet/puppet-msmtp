@@ -12,9 +12,64 @@
 #   Hostname of the SMTP smarthost to be used.
 #   Defaults to 'mail'.
 #
+# [*port*]
+#   The port that the SMTP server listens on.  The default port  will  be
+#   acquired  from your  operating  system's  service database: for SMTP,
+#   the service is "smtp" (default port 25), unless TLS without STARTTLS is
+#   used, in which case it is "smtps" (465). For LMTP, it is "lmtp".
+#
+# [*timeout*]
+#   Set or unset a network timeout, in seconds. The argument off means that
+#   no timeout will be set, which means that the operating system default
+#   will be used.
+#
+# [*protocol*]
+#   Set the protocol to use. Currently only SMTP and LMTP are supported.
+#   Default: smtp
+#
+# [*auth*]
+#   (on|off|method)]
+#   This command enables or disables SMTP authentication.
+#   You should not need to set the method yourself; with the argument on,
+#   msmtp will choose the best one  available  for you.
+#
+# [*user*]
+#   Set your user name for SMTP authentication.
+#
+# [*password*]
+#   Set your password for SMTP authentication.
+#
+# [*tls*]
+#   Enable or disable TLS/SSL encryption. 
+#   
+# [*tls_trust_file*]
+#   This command activates strict server certificate verification.
+#   Recommended if [*tls*] is on.
+#
+# [*tls_starttls*]
+#   By default, TLS encryption is activated using the STARTTLS SMTP command.
+#   Set to "no" if you want to force tls (SSL).
+#
+# [*domain*]
+#   Argument of the SMTP EHLO (or LMTP LHLO) command.
+#   Default: $::domain fact.
+#
+# [*maildomain*]
+#   Set the domain part for generated envelope-from addresses.
+#   It is only used when auto_from is on.
+#
 # [*from*]
 #   Envelope-From to enforce on all outgoing mail.
 #   Defaults to "$::fqdn@$domain"
+#
+# [*auto_from*]
+#   Enable or disable automatic envelope-fromaddresses.
+#   The default is off.
+#
+# [*log_facility*]
+#   Enable or disable syslog logging.
+#   The facility can be one of LOG_USER, LOG_MAIL, LOG_LOCAL0, ..., LOG_LOCAL7.
+#   Default: LOG_MAIL
 #
 # [*defaultalias*]
 #   E-mail adres to receive all local mail. For cron messages, etc.
@@ -66,6 +121,18 @@
 #   Basically you can run a dryrun for this specific module if you set
 #   this to true. Default: false
 #
+# [*source_dir*]
+#   If defined, the whole msmtp configuration directory content is retrieved
+#   recursively from the specified source
+#   (source => $source_dir , recurse => true)
+#   Can be defined also by the (top scope) variable $msmtp_source_dir
+#
+# [*source_dir_purge*]
+#   If set to true (default false) the existing configuration directory is
+#   mirrored with the content retrieved from source_dir
+#   (source => $source_dir , recurse => true , purge => true)
+#   Can be defined also by the (top scope) variable $msmtp_source_dir_purge
+#
 # Default class params - As defined in msmtp::params.
 # Note that these variables are mostly defined and used in the module itself,
 # overriding the default values might not affected all the involved components.
@@ -89,6 +156,19 @@
 #
 class msmtp (
   $smarthost           = params_lookup( 'smarthost' ),
+  $port                = params_lookup( 'port' ),
+  $timeout             = params_lookup( 'timeout' ),
+  $protocol            = params_lookup( 'protocol' ),
+  $auth                = params_lookup( 'auth' ),
+  $user                = params_lookup( 'user' ),
+  $password            = params_lookup( 'password' ),
+  $tls                 = params_lookup( 'tls' ),
+  $tls_trust_file      = params_lookup( 'tls_trust_file' ),
+  $tls_starttls        = params_lookup( 'tls_starttls' ),
+  $domain              = params_lookup( 'domain' ),
+  $maildomain          = params_lookup( 'maildomain' ),
+  $auto_from           = params_lookup( 'auto_from' ),
+  $log_facility        = params_lookup( 'log_facility' ),
   $from                = params_lookup( 'from' ),
   $defaultalias        = params_lookup( 'defaultalias' ),
   $aliases             = params_lookup( 'aliases' ),
@@ -102,7 +182,9 @@ class msmtp (
   $noops               = params_lookup( 'noops' ),
   $package             = params_lookup( 'package' ),
   $config_file         = params_lookup( 'config_file' ),
-  ) inherits msmtp::params {
+  $source_dir          = params_lookup( 'source_dir' ),
+  $source_dir_purge    = params_lookup( 'source_dir_purge' ),
+) inherits msmtp::params {
 
   $config_file_mode=$msmtp::params::config_file_mode
   $config_file_owner=$msmtp::params::config_file_owner
