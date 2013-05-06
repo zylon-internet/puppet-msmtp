@@ -23,9 +23,12 @@ class msmtp::params {
   $password = ''
   $tls = ''
   $tls_trust_file = ''
+  $tls_starttls = ''
 
   $domain = $::domain
   $maildomain = $::domain
+
+  $auto_from = ''
 
   $from = "$::fqdn@${::domain}"
   $defaultalias = "hostmaster@${::domain}"
