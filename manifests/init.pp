@@ -119,7 +119,7 @@
 # [*noops*]
 #   Set noop metaparameter to true for all the resources managed by the module.
 #   Basically you can run a dryrun for this specific module if you set
-#   this to true. Default: false
+#   this to true. Default: undef
 #
 # Default class params - As defined in msmtp::params.
 # Note that these variables are mostly defined and used in the module itself,
@@ -178,7 +178,6 @@ class msmtp (
 
   $bool_absent=any2bool($absent)
   $bool_audit_only=any2bool($audit_only)
-  $bool_noops=any2bool($noops)
 
   if $defaultalias {
     mailalias { 'default':
@@ -227,7 +226,7 @@ class msmtp (
   ### Managed resources
   package { $msmtp::package:
     ensure  => $msmtp::manage_package,
-    noop    => $msmtp::bool_noops,
+    noop    => $msmtp::noops,
   }
 
   file { 'msmtp.conf':
@@ -241,7 +240,7 @@ class msmtp (
     content => $msmtp::manage_file_content,
     replace => $msmtp::manage_file_replace,
     audit   => $msmtp::manage_audit,
-    noop    => $msmtp::bool_noops,
+    noop    => $msmtp::noops,
   }
 
   ### Include custom class if $my_class is set
