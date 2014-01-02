@@ -20,7 +20,7 @@ password <%= scope.lookupvar('msmtp::password') %>
 <% end -%>
 
 <% if scope.lookupvar('msmtp::tls') != '' -%>
-tls <%= scope.lookupvar('msmtp::tls') != '' %>
+tls <%= scope.lookupvar('msmtp::tls') %>
 tls_trust_file  <%= scope.lookupvar('msmtp::tls_trust_file') %>
 <% end -%>
 <% if scope.lookupvar('msmtp::tls_starttls') != '' -%>
