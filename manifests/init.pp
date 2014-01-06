@@ -183,7 +183,8 @@ class msmtp (
     mailalias { 'default':
       recipient => $defaultalias,
       target    => $aliases,
-      notify    => Exec['msmtp-newaliases']
+      notify    => Exec['msmtp-newaliases'],
+      require   => Package[$msmtp::package],
     }
 
     exec { 'msmtp-newaliases':
