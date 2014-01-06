@@ -1,19 +1,46 @@
-### Managed by puppet
-#
-### Served by:        '<%= scope.lookupvar('::servername') %>'
-### Module:           '<%= scope.to_hash['module_name'] %>'
-### Template source:  'modules<%= template_source.gsub(Regexp.new("^#{Puppet::Node::Environment.current[:modulepath].gsub(':','|')}"),"") %>'
+# This file is managed by Puppet. DO NOT EDIT.
 
 account default
   
-# The SMTP smarthost.
-host <%= smarthost %>
+host <%= scope.lookupvar('msmtp::smarthost') %>
+<% if scope.lookupvar('msmtp::port') != '' -%>
+port <%= scope.lookupvar('msmtp::port') %>
+<% end -%>
+<% if scope.lookupvar('msmtp::timeout') != '' -%>
+timeout <%= scope.lookupvar('msmtp::timeout') %>
+<% end -%>
+<% if scope.lookupvar('msmtp::protocol') != '' -%>
+protocol <%= scope.lookupvar('msmtp::protocol') %>
+<% end -%>
 
-# Rewrites all outgoing mail to a fixed sender.
-from <%= from %>
+<% if scope.lookupvar('msmtp::auth') != '' -%>
+auth <%= scope.lookupvar('msmtp::auth') %>
+user <%= scope.lookupvar('msmtp::user') %>
+password <%= scope.lookupvar('msmtp::password') %>
+<% end -%>
 
-# Set aliases-lookup so you can have a proper fall-through default destination for things like cron
-aliases <%= aliases %>
+<% if scope.lookupvar('msmtp::tls') != '' -%>
+tls <%= scope.lookupvar('msmtp::tls') %>
+tls_trust_file  <%= scope.lookupvar('msmtp::tls_trust_file') %>
+<% end -%>
+<% if scope.lookupvar('msmtp::tls_starttls') != '' -%>
+tls_starttls <%= scope.lookupvar('msmtp::tls_starttls') %>
+<% end -%>
 
-# Syslog logging with facility LOG_MAIL instead of the default LOG_USER.
-syslog LOG_MAIL
+<% if scope.lookupvar('msmtp::domain') != '' -%>
+domain <%= scope.lookupvar('msmtp::domain') %>
+<% end -%>
+<% if scope.lookupvar('msmtp::auto_from') != '' -%>
+auto-from <%= scope.lookupvar('msmtp::auto_from') %>
+maildomain <%= scope.lookupvar('msmtp::maildomain') %>
+<% end -%>
+
+from <%= scope.lookupvar('msmtp::from') %>
+
+<% if scope.lookupvar('msmtp::aliases') != '' -%>
+aliases <%= scope.lookupvar('msmtp::aliases') %>
+<% end -%>
+
+<% if scope.lookupvar('msmtp::syslog') != '' -%>
+syslog <%= scope.lookupvar('msmtp::log_facility') %>
+<% end -%>

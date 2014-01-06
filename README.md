@@ -1,4 +1,4 @@
-= Puppet module: msmtp
+# Puppet module: msmtp
 
 This is a Puppet module for msmtp
 It provides only package installation and file configuration.
@@ -14,7 +14,7 @@ Released under the terms of Apache 2 License.
 This module requires the presence of Example42 Puppi module in your modulepath.
 
 
-== USAGE - Basic management
+## USAGE - Basic management
 
 * Install msmtp with default settings
 
@@ -45,20 +45,13 @@ This module requires the presence of Example42 Puppi module in your modulepath.
         }
 
 
-== USAGE - Overrides and Customizations
+## USAGE - Overrides and Customizations
 * Use custom sources for main config file 
 
         class { 'msmtp':
           source => [ "puppet:///modules/example42/msmtp/msmtp.conf-${hostname}" , "puppet:///modules/example42/msmtp/msmtp.conf" ], 
         }
 
-
-* Use custom source directory for the whole configuration dir
-
-        class { 'msmtp':
-          source_dir       => 'puppet:///modules/example42/msmtp/conf/',
-          source_dir_purge => false, # Set to true to purge any existing file not present in $source_dir
-        }
 
 * Use custom template for main config file. Note that template and source arguments are alternative. 
 
@@ -73,6 +66,5 @@ This module requires the presence of Example42 Puppi module in your modulepath.
         }
 
 
-== CONTINUOUS TESTING
 
-Travis {<img src="https://travis-ci.org/example42/puppet-msmtp.png?branch=master" alt="Build Status" />}[https://travis-ci.org/example42/puppet-msmtp]
+[![Build Status](https://travis-ci.org/example42/puppet-msmtp.png?branch=master)](https://travis-ci.org/example42/puppet-msmtp)
